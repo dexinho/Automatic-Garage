@@ -1,0 +1,35 @@
+Zadatak: Automatska garaža (verzija 1)
+
+Vaš zadatak je dizajnirati sistem za automatsku garažu koristeći se principima 
+objektno-orijentranog programiranja i programskim jezikom JavaScript.
+
+U garaži se parkiraju različiti tipovi vozila, primarno uključujući automobile, 
+motocikle i kamione. Svako vozilo ima svoje karakteristike: registracijski broj, 
+marka, model, i broj kotača.
+
+Garaža ima ograničen broj parkirnih mjesta za svaku vrstu vozila. 
+Na primjer, možda ima 50 parkirnih mjesta za osobne automobile, 
+20 za motocikle i 10 za kamione.
+
+Vaša implementacija treba omogućiti:
+
+1. Dodavanje vozila u garažu (ako ima slobodnih mjesta za taj tip vozila).
+2. Uklanjanje vozila iz garaže.
+3. Pronalaženje vozila po registracijskom broju 
+(ukoliko je u garaži, vratiti informacije o vozilu).
+4. Prikazivanje popisa svih vozila u garaži.
+5. Provjeru dostupnosti slobodnih parkirnih mjesta za svaku vrstu vozila.
+
+Napišite klase i metode koje će omogućiti rješenje ovog problema. 
+Također, možete dodati dodatne metode i atribute prema potrebi 
+za dodatnim funkcionalnostima ili validacijama. 
+
+Validnost rjesenja se moze pokazati implementacijom testne funkcije 
+koja ilustrira validnost implementacije pojedinih funkcionalnosti iz specifikacije.
+
+Dodatne funkcionalnosti:
+- Kreirajte jednostan graficki web interfejs kojim se mogu testirati 
+implementacije pojedinih funkcionalnosti iz specifikacije.
+- Podatke o kojim aplikacija brine spremite u LocalStorage.
+- Implementirajte funkcionalnost dinamickog kreiranja novog tipa vozila.
+- Implementirajte funkcionalnost dinamickog kreiranja garaza.
