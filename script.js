@@ -31,7 +31,6 @@ class Garage {
             console.log(`${vehicleType[0].toUpperCase() + vehicleType.slice(1)} is parked with registration number: ${vehicle.registration}`)
         }
         else if (allVehiclesParked[vehicleType]?.length > this[vehicleType]) console.log(`There is no more parking space for ${vehicleType}s`)
-        else console.log(`${vehicleType} already parked!`)
 
         this.saveToLocalStorage()
     }
@@ -128,72 +127,59 @@ class Vehicle {
         this.brand = brand
         this.numberOfWheels = numberOfWheels
     }
-}
 
-
-class Car extends Vehicle {
-    constructor(carProperties) {
-        super(carProperties)
+    static createNewType = (typeName) => {
+        return class extends Vehicle {
+            static name = typeName
+            constructor(args){
+                super(args)
+            }
+        }
     }
 }
 
-class Bike extends Vehicle {
-    constructor(bikeProperties) {
-        super(bikeProperties)
-    }
-}
+const Car = Vehicle.createNewType('Car')
+const Bike = Vehicle.createNewType('Bike')
+const Truck = Vehicle.createNewType('Truck')
 
-class Truck extends Vehicle {
-    constructor(truckProperties) {
-        super(truckProperties)
-    }
-}
-
-class Helicopter extends Vehicle {
-    constructor(heliProperties) {
-        super(heliProperties)
-    }
-}
-
-const bigGarage = new Garage(111, {
-    bike: 10,
+const bigGarage = new Garage(123, {
     car: 10,
-    truck: 5,
-    helicopter: 2,
+    bike: 5,
+    truck: 2,
 })
 
 const car1 = new Car({
-    registration: 123124124124,
-    model: '22',
-    brand: '2111',
-    numberOfWheels: 20,
+    registration: 12788,
+    model: 'altima',
+    brand: 'nissan',
+    numberOfWheels: 4,
 })
 
 const car2 = new Car({
-    registration: 13224124,
-    model: 'aa',
-    brand: 's',
-    numberOfWheels: 20,
+    registration: 63124,
+    model: 'polo',
+    brand: 'volkswagen',
+    numberOfWheels: 4,
 })
 
 const truck1 = new Truck({
     registration: 124124,
-    model: 'BB',
-    brand: 's',
-    numberOfWheels: 20,
+    model: 'xc40',
+    brand: 'volvo',
+    numberOfWheels: 4,
 })
 
-const heli1 = new Helicopter({
+const bike1 = new Bike({
     registration: 66224,
-    model: '2aa',
-    brand: 's',
-    numberOfWheels: 20,
+    model: 'wmn',
+    brand: 'canyon',
+    numberOfWheels: 2,
 })
 
 bigGarage.add(car1)
 bigGarage.add(car2)
+bigGarage.add(bike1)
 bigGarage.add(truck1)
-bigGarage.add(heli1)
 
 // bigGarage.findVehicleByRegistrationNumber(66224)
 // bigGarage.showAllVehiclesParked()
@@ -203,5 +189,6 @@ bigGarage.add(heli1)
 //     truck: 1,
 //     car: 1,
 // }
+
 
 
