@@ -1,16 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Automatic Garrage</title>
-    
+
 </head>
+
 <body>
     <main>
-        
+        <div id="garage-id-div">
+            <label for="garage-id-input">Garage ID: <input placeholder="123" type="text" id="garage-id-input"
+                    maxlength="10" minlength="1"></label>
+        </div>
+        <div id="list-of-created-vehicles-div">
+            <span class='list-description-spans'>Vehicle Type</span>
+            <span class='list-description-spans' id="parking-slots-span">Parking Slots</span>
+            <input class="added-inputs" maxlength='10' type="text" placeholder="car">
+            <input class='added-inputs' min="1" value='1' type="number">
+            <i class="fa-regular fa-trash-can"></i>
+        </div>
+        <div id="button-creation-div">
+            <button id="add-vehicle-slot-btn">Add Vehicle Type</button>
+            <button id="create-garage-btn">Create Garage</button>
+        </div>
+        </div>
+
     </main>
+    <!-- <dialog id="new-vehicle-slot-dialog">
+        <label for="vehicle-name-input"><input type="text" id="vehicle-name-input" placeholder="car"></label>
+        <label for="vehicle-slots-input"><input type="number" id="vehicle-slots-input" placeholder="20"></label>
+        <button id="confirm-creation-button">Confirm</button>
+    </dialog> -->
 </body>
+
 </html>
