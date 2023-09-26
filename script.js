@@ -1,4 +1,5 @@
 class Garage {
+
     constructor(id, parkingSpacesPerVehicle) {
 
         this.id = id
@@ -9,8 +10,6 @@ class Garage {
             if (Object.keys(this.vehiclesParked).length < Object.keys(parkingSpacesPerVehicle).length)
                 this.vehiclesParked[key] = []
         }
-
-        // this.freezeObject()
     }
 
     loadFromLocalStorage() {
@@ -106,17 +105,43 @@ class Garage {
         }
     }
 
-    freezeObject() {
-        // for (const key in this) {
-        //     Object.defineProperties(this, {
-        //         [key]: {
-        //             configurable: false,
-        //             writable: false,
-        //             enumerable: false,
-        //         },
-        //     })
-        // }
-        Object.freeze(this)
+    static placeholderArr = ['motorcycle', 'car', 'bicycle', 'bus', 'truck', 'plane']
+
+    static createNewInput = () => {
+        const typeInput = document.createElement('input')
+        const slotInput = document.createElement('input')
+        const trashCan = document.createElement('i')
+
+        listCreatedVehiclesDiv.append(typeInput)
+        listCreatedVehiclesDiv.append(slotInput)
+        listCreatedVehiclesDiv.append(trashCan)
+
+        typeInput.classList.add('added-inputs')
+        slotInput.classList.add('added-inputs')
+
+        typeInput.type = 'text'
+        typeInput.maxLength = 10
+        typeInput.placeholder = this.placeholderArr[Math.floor(Math.random() * this.placeholderArr.length)]
+        slotInput.type = 'number'
+        slotInput.value = 1
+        slotInput.min = 1
+
+        trashCan.classList.add('fa-regular', 'fa-trash-can')
+
+        console.log(trashCans)
+    }
+
+    static createGarageProperties = () => {
+        const garageSlots = {}
+
+        const addedInputs = document.querySelectorAll('.added-inputs')
+
+        for (let i = 0; i < addedInputs.length; i += 2) {
+            if (addedInputs[i].value !== '' && addedInputs[i + 1] !== '')
+                garageSlots[addedInputs[i].value] = addedInputs[i + 1].value
+        }
+
+        return garageSlots
     }
 }
 
@@ -131,7 +156,7 @@ class Vehicle {
     static createNewType = (typeName) => {
         return class extends Vehicle {
             static name = typeName
-            constructor(args){
+            constructor(args) {
                 super(args)
             }
         }
@@ -141,6 +166,34 @@ class Vehicle {
 const Car = Vehicle.createNewType('Car')
 const Bike = Vehicle.createNewType('Bike')
 const Truck = Vehicle.createNewType('Truck')
+
+const addVehicleSlotBtn = document.querySelector('#add-vehicle-slot-btn')
+const createGarageBtn = document.querySelector('#create-garage-btn')
+const vehicleNameInput = document.querySelector('#vehicle-name-input')
+const vehicleSlotsInput = document.querySelector('#vehicle-slots-input')
+const confirmCreationButton = document.querySelector('#confirm-creation-button')
+const newVehicleSlotDialog = document.querySelector('#new-vehicle-slot-dialog')
+const listCreatedVehiclesDiv = document.querySelector('#list-of-created-vehicles-div')
+const form = document.querySelector('#form')
+
+const addedVehiclesObj = {}
+
+addVehicleSlotBtn.addEventListener('click', Garage.createNewInput)
+
+const trashCans = document.getElementsByClassName('fa-trash-can')
+
+Array.from(trashCans).forEach(can => {
+    can.addEventListener('click', () => {
+    })
+})
+
+createGarageBtn.addEventListener('click', () => {
+    const garageIDInput = document.querySelector('#garage-id-input')
+    if (garageIDInput.value) {
+        const newGarage = new Garage(garageIDInput.value, Garage.createGarageProperties())
+        console.log(newGarage)
+    }
+})
 
 const bigGarage = new Garage(123, {
     car: 10,
@@ -181,8 +234,11 @@ bigGarage.add(car2)
 bigGarage.add(bike1)
 bigGarage.add(truck1)
 
+bigGarage.remove(car1)
+bigGarage.remove(bike1)
+
 // bigGarage.findVehicleByRegistrationNumber(66224)
-// bigGarage.showAllVehiclesParked()
+bigGarage.showAllVehiclesParked()
 // bigGarage.showFreeParkingSpaces()
 
 // bigGarage.resetGarageWithNewSlots = {
