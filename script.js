@@ -3,7 +3,7 @@ class Garage {
     constructor(id, parkingSpacesPerVehicle) {
 
         this.id = id
-        this.vehiclesParked = this.loadFromLocalStorage()
+        this.vehiclesParked = {}
 
         for (const key in parkingSpacesPerVehicle) {
             this[key] = parkingSpacesPerVehicle[key]
@@ -12,13 +12,13 @@ class Garage {
         }
     }
 
-    loadFromLocalStorage() {
-        return JSON.parse(localStorage.getItem(this.id)) || {}
-    }
+    // loadFromLocalStorage() {
+    //     return JSON.parse(localStorage.getItem(this.id)) || {}
+    // }
 
-    saveToLocalStorage = () => {
-        localStorage.setItem(this.id, JSON.stringify(this.vehiclesParked))
-    }
+    // saveToLocalStorage = () => {
+    //     localStorage.setItem(this.id, JSON.stringify(this.vehiclesParked))
+    // }
 
     add = (vehicle) => {
         const vehicleType = vehicle.constructor.name.toLowerCase()
@@ -31,7 +31,7 @@ class Garage {
         }
         else if (allVehiclesParked[vehicleType]?.length > this[vehicleType]) console.log(`There is no more parking space for ${vehicleType}s`)
 
-        this.saveToLocalStorage()
+        // this.saveToLocalStorage()
     }
 
 
@@ -47,7 +47,7 @@ class Garage {
             return true
         })
 
-        this.saveToLocalStorage()
+        // this.saveToLocalStorage()
     }
 
     findVehicleByRegistrationNumber = (registrationNumber) => {
@@ -104,45 +104,6 @@ class Garage {
             allVehiclesParked[key] = []
         }
     }
-
-    static placeholderArr = ['motorcycle', 'car', 'bicycle', 'bus', 'truck', 'plane']
-
-    static createNewInput = () => {
-        const typeInput = document.createElement('input')
-        const slotInput = document.createElement('input')
-        const trashCan = document.createElement('i')
-
-        listCreatedVehiclesDiv.append(typeInput)
-        listCreatedVehiclesDiv.append(slotInput)
-        listCreatedVehiclesDiv.append(trashCan)
-
-        typeInput.classList.add('added-inputs')
-        slotInput.classList.add('added-inputs')
-
-        typeInput.type = 'text'
-        typeInput.maxLength = 10
-        typeInput.placeholder = this.placeholderArr[Math.floor(Math.random() * this.placeholderArr.length)]
-        slotInput.type = 'number'
-        slotInput.value = 1
-        slotInput.min = 1
-
-        trashCan.classList.add('fa-regular', 'fa-trash-can')
-
-        console.log(trashCans)
-    }
-
-    static createGarageProperties = () => {
-        const garageSlots = {}
-
-        const addedInputs = document.querySelectorAll('.added-inputs')
-
-        for (let i = 0; i < addedInputs.length; i += 2) {
-            if (addedInputs[i].value !== '' && addedInputs[i + 1] !== '')
-                garageSlots[addedInputs[i].value] = addedInputs[i + 1].value
-        }
-
-        return garageSlots
-    }
 }
 
 class Vehicle {
@@ -163,6 +124,85 @@ class Vehicle {
     }
 }
 
+class Form {
+
+    static placeholderArr = ['motorcycle', 'car', 'bicycle', 'bus', 'truck', 'plane']
+
+    static updateTrashCan = () => {
+        Array.from(trashCans).forEach(can => {
+            can.addEventListener('click', (e) => {
+
+                const numberInput = e.target.previousElementSibling
+                const textInput = numberInput.previousElementSibling
+
+                listCreatedVehiclesDiv.removeChild(e.target)
+                listCreatedVehiclesDiv.removeChild(numberInput)
+                listCreatedVehiclesDiv.removeChild(textInput)
+
+                e.stopImmediatePropagation()
+            })
+        })
+    }
+
+    static createNewInput = () => {
+        const typeInput = document.createElement('input')
+        const slotInput = document.createElement('input')
+        const trashCan = document.createElement('i')
+
+        listCreatedVehiclesDiv.append(typeInput)
+        listCreatedVehiclesDiv.append(slotInput)
+        listCreatedVehiclesDiv.append(trashCan)
+
+        typeInput.classList.add('added-inputs')
+        slotInput.classList.add('added-inputs')
+
+        typeInput.type = 'text'
+        typeInput.maxLength = 10
+        typeInput.placeholder = this.placeholderArr[Math.floor(Math.random() * this.placeholderArr.length)]
+        slotInput.type = 'number'
+        slotInput.value = 1
+        slotInput.min = 1
+        slotInput.max = 1000
+
+        trashCan.classList.add('fa-regular', 'fa-trash-can')
+        this.updateTrashCan()
+    }
+
+    static createProperties = () => {
+        const addedInputs = document.querySelectorAll('.added-inputs')
+        const garageSlots = {}
+
+        for (let i = 0; i < addedInputs.length; i += 2) {
+            if (addedInputs[i].value !== '' && addedInputs[i + 1] !== '')
+                garageSlots[addedInputs[i].value] = addedInputs[i + 1].value
+        }
+
+        return garageSlots
+    }
+
+    static loadGaragesFromLocalStorage = () => {
+        const garages = JSON.parse(localStorage.getItem('garages')) || []
+        const garageSelector = document.querySelector('#garage-selector')
+
+        garages.forEach(garage => {
+            const newOption = document.createElement('option')
+            newOption.value = garage.id
+            garageSelector.append(newOption)
+        })
+
+        garageSelector.addEventListener('change', () => {
+            const continueBtn = document.querySelector('#continue-btn')
+            continueBtn.style.display = 'block'
+            continueBtn.addEventListener('click', () => {
+                console.log(garages)
+            })
+        })
+
+
+    }
+
+}
+
 const Car = Vehicle.createNewType('Car')
 const Bike = Vehicle.createNewType('Bike')
 const Truck = Vehicle.createNewType('Truck')
@@ -174,71 +214,67 @@ const vehicleSlotsInput = document.querySelector('#vehicle-slots-input')
 const confirmCreationButton = document.querySelector('#confirm-creation-button')
 const newVehicleSlotDialog = document.querySelector('#new-vehicle-slot-dialog')
 const listCreatedVehiclesDiv = document.querySelector('#list-of-created-vehicles-div')
-const form = document.querySelector('#form')
-
-const addedVehiclesObj = {}
-
-addVehicleSlotBtn.addEventListener('click', Garage.createNewInput)
-
 const trashCans = document.getElementsByClassName('fa-trash-can')
+const createNewGarageBtn = document.querySelector('#create-new-garage-btn')
+const garageSelector = document.querySelector('#garage-selector')
+const selectGarageContainer = document.querySelector('#select-garage-container')
+const setupGarageContainer = document.querySelector('#setup-garage-container')
+const returnToSelectBtn = document.querySelector('#return-to-select-btn')
+const refreshSelectionBtn = document.querySelector('#refresh-selection-btn')
+const garageID = document.querySelector('#garage-id-input')
 
-Array.from(trashCans).forEach(can => {
-    can.addEventListener('click', () => {
-    })
-})
+const GARAGES_IN_LOCAL_STORAGE = JSON.parse(localStorage.getItem('garages')) || []
+
+garageSelector.addEventListener('click', Form.loadGaragesFromLocalStorage)
+
+addVehicleSlotBtn.addEventListener('click', Form.createNewInput)
 
 createGarageBtn.addEventListener('click', () => {
-    const garageIDInput = document.querySelector('#garage-id-input')
-    if (garageIDInput.value) {
-        const newGarage = new Garage(garageIDInput.value, Garage.createGarageProperties())
-        console.log(newGarage)
+
+    if (GARAGES_IN_LOCAL_STORAGE.every(garage => garage.id !== garageID.value)) {
+        const properties = Form.createProperties()
+        GARAGES_IN_LOCAL_STORAGE.push(new Garage(garageID.value, properties))
+
+        localStorage.setItem('garages', JSON.stringify(GARAGES_IN_LOCAL_STORAGE))
     }
+
+    console.log(GARAGES_IN_LOCAL_STORAGE)
 })
 
-const bigGarage = new Garage(123, {
-    car: 10,
-    bike: 5,
-    truck: 2,
+createNewGarageBtn.addEventListener('click', () => {
+    selectGarageContainer.style.display = 'none'
+    setupGarageContainer.style.display = 'flex'
 })
 
-const car1 = new Car({
-    registration: 12788,
-    model: 'altima',
-    brand: 'nissan',
-    numberOfWheels: 4,
+returnToSelectBtn.addEventListener('click', () => {
+    setupGarageContainer.style.display = 'none'
+    selectGarageContainer.style.display = 'flex'
 })
 
-const car2 = new Car({
-    registration: 63124,
-    model: 'polo',
-    brand: 'volkswagen',
-    numberOfWheels: 4,
+refreshSelectionBtn.addEventListener('click', () => {
+    garageID.value = ''
+
 })
 
-const truck1 = new Truck({
-    registration: 124124,
-    model: 'xc40',
-    brand: 'volvo',
-    numberOfWheels: 4,
-})
+// const bigGarage = new Garage(123, {
+//     car: 10,
+//     bike: 5,
+//     truck: 2,
+// })
 
-const bike1 = new Bike({
-    registration: 66224,
-    model: 'wmn',
-    brand: 'canyon',
-    numberOfWheels: 2,
-})
+// const car1 = new Car({
+//     registration: 12788,
+//     model: 'altima',
+//     brand: 'nissan',
+//     numberOfWheels: 4,
+// })
 
-bigGarage.add(car1)
-bigGarage.add(car2)
-bigGarage.add(bike1)
-bigGarage.add(truck1)
+// bigGarage.add(car1)
 
-bigGarage.remove(car1)
-bigGarage.remove(bike1)
+// bigGarage.remove(car1)
 
 // bigGarage.findVehicleByRegistrationNumber(66224)
-bigGarage.showAllVehiclesParked()
+// bigGarage.showAllVehiclesParked()
 // bigGarage.showFreeParkingSpaces()
 
 // bigGarage.resetGarageWithNewSlots = {
