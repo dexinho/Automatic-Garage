@@ -15,23 +15,37 @@
 
 <body>
     <main>
-        <div id="garage-id-div">
-            <label for="garage-id-input">Garage ID: <input placeholder="123" type="text" id="garage-id-input"
-                    maxlength="10" minlength="1"></label>
+        <div id="select-garage-container">
+            <p id="garage-title">AUTOMATIC GARAGE SYSTEM</p>
+            <select name="garage-selector" id="garage-selector">
+                <option selected hidden>Select Garage</option>
+            </select>
+            <button id="continue-btn">Continue</button>
+            <button id="create-new-garage-btn">Create New Garage</button>
         </div>
-        <div id="list-of-created-vehicles-div">
-            <span class='list-description-spans'>Vehicle Type</span>
-            <span class='list-description-spans' id="parking-slots-span">Parking Slots</span>
-            <input class="added-inputs" maxlength='10' type="text" placeholder="car">
-            <input class='added-inputs' min="1" value='1' type="number">
-            <i class="fa-regular fa-trash-can"></i>
-        </div>
-        <div id="button-creation-div">
-            <button id="add-vehicle-slot-btn">Add Vehicle Type</button>
-            <button id="create-garage-btn">Create Garage</button>
-        </div>
-        </div>
+        <div id="setup-garage-container">
+            <div id="garage-id-div">
+                <button id="return-to-select-btn"><i class="fa-solid fa-backward"></i></button>
 
+                <label for="garage-id-input">GARAGE ID: <input placeholder="123456789" type="text" id="garage-id-input"
+                        maxlength="12" minlength="1"></label>
+                <button id="refresh-selection-btn"><i class="fa-solid fa-rotate-left"></i></button>
+
+            </div>
+            <div id="list-description-div">
+                <span class='list-description-spans'>Vehicle Type</span>
+                <span class='list-description-spans' id="parking-slots-span">Parking Slots</span>
+            </div>
+            <div id="list-of-created-vehicles-div">
+                <input class="added-inputs" maxlength='10' type="text" placeholder="car">
+                <input class='added-inputs' min="1" max='1000' value='1' type="number">
+                <span><i class="fa-solid fa-check"></i></span>
+            </div>
+            <div id="button-creation-div">
+                <button id="add-vehicle-slot-btn">Add Vehicle Type</button>
+                <button id="create-garage-btn">Create Garage</button>
+            </div>
+        </div>
     </main>
     <!-- <dialog id="new-vehicle-slot-dialog">
         <label for="vehicle-name-input"><input type="text" id="vehicle-name-input" placeholder="car"></label>
