@@ -15,20 +15,30 @@
 
 <body>
     <main>
-        <div id="select-garage-container">
+        <section id="select-garage-container">
             <p id="garage-title">AUTOMATIC GARAGE SYSTEM</p>
-            <select name="garage-selector" id="garage-selector">
-                <option selected hidden>Select Garage</option>
-            </select>
+            <div id="garage-selector-div">
+                <select name="garage-selector" id="garage-selector">
+                    <option value="select-garage">Select Garage</option>
+                </select>
+                <dialog id="delete-decision-dialog">
+                    <div id="delete-decision-div">
+                        <p>Are you sure?</p>
+                        <button class='deletion-choice-btns' id="delete-yes-btn">YES</button>
+                        <button class='deletion-choice-btns' id="delete-no-btn">NO</button>
+                    </div>
+                </dialog>
+                <i class="fa-solid fa-shop-slash"></i>
+            </div>
             <button id="continue-btn">Continue</button>
-            <button id="create-new-garage-btn">Create New Garage</button>
-        </div>
-        <div id="setup-garage-container">
+            <button id="build-new-garage-btn">Build New Garage</button>
+        </section>
+        <section id="setup-garage-container">
             <div id="garage-id-div">
                 <button id="return-to-select-btn"><i class="fa-solid fa-backward"></i></button>
 
                 <label for="garage-id-input">GARAGE ID: <input placeholder="123456789" type="text" id="garage-id-input"
-                        maxlength="12" minlength="1"></label>
+                        maxlength="9" minlength="1"></label>
                 <button id="refresh-selection-btn"><i class="fa-solid fa-rotate-left"></i></button>
 
             </div>
@@ -37,21 +47,80 @@
                 <span class='list-description-spans' id="parking-slots-span">Parking Slots</span>
             </div>
             <div id="list-of-created-vehicles-div">
-                <input class="added-inputs" maxlength='10' type="text" placeholder="car">
-                <input class='added-inputs' min="1" max='1000' value='1' type="number">
+                <input id='first-garage-input' class="added-inputs" maxlength='10' type="text" placeholder="car">
+                <input id='second-garage-input' class='added-inputs' min="1" max='1000' value='1' type="number">
                 <span><i class="fa-solid fa-check"></i></span>
             </div>
             <div id="button-creation-div">
                 <button id="add-vehicle-slot-btn">Add Vehicle Type</button>
-                <button id="create-garage-btn">Create Garage</button>
+                <button id="create-garage-btn" disabled>Create Garage</button>
             </div>
-        </div>
+        </section>
+        <div id="container">
+            <div id="block1" class="draggable"></div>
+            <div id="block2" class="draggable red"></div>
+          </div>
+        <script>
+            const container = document.getElementById('container');
+
+            container.addEventListener('mousedown', (e) => {
+                let isDragging = false;
+                let initialX, initialY;
+
+                const handleMouseMove = (event) => {
+                    if (!isDragging) {
+                        isDragging = true;
+                        // Add the 'dragging' class when the element is being dragged
+                        event.target.classList.add('dragging');
+                    }
+
+                    const dx = event.clientX - initialX;
+                    const dy = event.clientY - initialY;
+
+                    // Use CSS transforms for smoother dragging
+                    event.target.style.transform = `translate(${dx}px, ${dy}px)`;
+
+                    // Update initial coordinates for the next movement calculation
+                    initialX = event.clientX;
+                    initialY = event.clientY;
+                };
+
+                const handleMouseUp = () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        // Remove the 'dragging' class when dragging is complete
+                        event.target.classList.remove('dragging');
+
+                        // Reset transform to clear the translate
+                        event.target.style.transform = '';
+                    }
+
+                    // Remove event listeners for mouse movement and release
+                    document.removeEventListener('mousemove', handleMouseMove);
+                    document.removeEventListener('mouseup', handleMouseUp);
+                };
+
+                initialX = e.clientX;
+                initialY = e.clientY;
+
+                // Throttle mousemove event to control update rate
+                document.addEventListener('mousemove', throttle(handleMouseMove, 16));
+                document.addEventListener('mouseup', handleMouseUp);
+            });
+
+            // Throttle function for optimizing mousemove event
+            function throttle(func, limit) {
+                let lastTime = 0;
+                return function () {
+                    const currentTime = new Date().getTime();
+                    if (currentTime - lastTime >= limit) {
+                        func.apply(null, arguments);
+                        lastTime = currentTime;
+                    }
+                };
+            }
+        </script>
     </main>
-    <!-- <dialog id="new-vehicle-slot-dialog">
-        <label for="vehicle-name-input"><input type="text" id="vehicle-name-input" placeholder="car"></label>
-        <label for="vehicle-slots-input"><input type="number" id="vehicle-slots-input" placeholder="20"></label>
-        <button id="confirm-creation-button">Confirm</button>
-    </dialog> -->
 </body>
 
 </html>
