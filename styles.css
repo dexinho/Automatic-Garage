@@ -23,6 +23,20 @@ body {
     background-repeat: no-repeat;
 }
 
+#select-garage-container {
+    margin: auto;
+    width: var(--container-width);
+    border: 2px solid rgb(94, 82, 82);
+    margin: 0 auto;
+    /* display: none; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+}
+
 #setup-garage-container {
     margin: auto;
     display: none;
@@ -35,17 +49,12 @@ body {
     gap: 1rem;
 }
 
-#select-garage-container {
-    margin: auto;
-    width: var(--container-width);
-    border: 2px solid rgb(94, 82, 82);
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    padding: 1rem;
+
+#select-garage-container>* {
+    width: 100%;
+    height: 2.5rem;
+    padding: 0.5rem;
+    font-size: 1rem;
 }
 
 #garage-title {
@@ -53,6 +62,7 @@ body {
     font-weight: bold;
     margin: 0;
     color: rgb(192, 92, 92);
+    font-size: 1.25rem;
 }
 
 [for='garage-id-input'] {
@@ -62,13 +72,6 @@ body {
     gap: 0.2rem;
 }
 
-#select-garage-container > * {
-    width: 100%;
-    height: 2.5rem;
-    padding: 0.5rem;
-    font-size: 1rem;
-}
-
 #return-to-select-div {
     display: flex;
     justify-content: space-between;
@@ -76,7 +79,8 @@ body {
     width: 100%;
 }
 
-#return-to-select-btn, #refresh-selection-btn {
+#return-to-select-btn,
+#refresh-selection-btn {
     font-size: 1.3rem;
     transition: scale 0.1s ease-in;
     background-color: transparent;
@@ -91,12 +95,14 @@ body {
     color: rgb(45, 117, 59);
 }
 
-#return-to-select-btn:hover, #refresh-selection-btn:hover {
+#return-to-select-btn:hover,
+#refresh-selection-btn:hover {
     scale: 1.1;
     color: rgb(63, 60, 55);
 }
 
-#return-to-select-btn:active, #refresh-selection-btn:active {
+#return-to-select-btn:active,
+#refresh-selection-btn:active {
     scale: 1;
 }
 
@@ -108,7 +114,7 @@ body {
     color: rgb(0, 0, 0);
 }
 
-#garage-id-div > * {
+#garage-id-div>* {
     font-size: 1.3rem;
 }
 
@@ -123,11 +129,50 @@ body {
 }
 
 
-#create-new-garage-btn {
+#build-new-garage-btn {
     background-color: rgb(25, 85, 65);
     border-radius: 1rem;
     color: whitesmoke;
     transition: scale 0.1s ease-in;
+}
+
+#garage-selector-div {
+    position: relative;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 1rem;
+}
+
+#garage-selector-div>* {
+    font-size: 1.3rem;
+    height: 2rem;
+}
+
+#garage-selector {
+    padding-left: 1rem;
+    padding-bottom: 0.1rem;
+    width: 50%;
+    translate: 1.3rem 0;
+}
+
+.fa-shop-slash {
+    translate: 1.3rem 0.25rem;
+    right: 2rem;
+    transition: scale 0.1s ease-in;
+    visibility: hidden;
+}
+
+.fa-shop-slash:hover {
+    scale: 1.1;
+    cursor: pointer;
+    color: rgb(175, 60, 60);
+}
+
+.fa-shop-slash:active {
+    scale: 1;
+    color: rgb(113, 113, 128);
 }
 
 #continue-btn {
@@ -138,13 +183,15 @@ body {
     display: none;
 }
 
-#continue-btn:hover, #create-new-garage-btn:hover {
+#continue-btn:hover,
+#build-new-garage-btn:hover {
     color: black;
     background-color: aquamarine;
     scale: 1.05;
 }
 
-#continue-btn:active, #create-new-garage-btn:active {
+#continue-btn:active,
+#build-new-garage-btn:active {
     color: black;
     background-color: aquamarine;
     scale: 1;
@@ -158,17 +205,16 @@ body {
     margin-top: 0.5em;
 }
 
-#button-creation-div > #add-vehicle-slot-btn {
+#button-creation-div>#add-vehicle-slot-btn {
     width: 100%;
     height: 30px;
-    font-size: 1.1rem;
 }
 
 #button-creation-div {
     width: 100%;
 }
 
-#button-creation-div > #create-garage-btn {
+#button-creation-div>#create-garage-btn {
     width: 100%;
     height: 50px;
     font-size: 1.1rem;
@@ -179,6 +225,7 @@ body {
     color: whitesmoke;
     transition: scale 0.1s ease-in;
     font-weight: bold;
+    font-size: 1rem;
 }
 
 #create-garage-btn {
@@ -199,13 +246,15 @@ body {
 }
 
 #garage-id-input {
-    padding: 0.2rem 0.5rem;
+    padding: 0.5rem 1rem;
     border-radius: 1rem;
     border: 1px solid black;
-    width: 100px;
+    width: 110px;
+    font-size: 1rem;
 }
 
-#list-of-created-vehicles-div, #list-description-div {
+#list-of-created-vehicles-div,
+#list-description-div {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 0.7fr 0.1fr;
@@ -227,11 +276,13 @@ button:hover {
     font-size: 1.1rem;
     transition: scale 0.1s ease-in, color 0.1s ease-in;
 }
+
 .fa-trash-can:hover {
     scale: 1.1;
     color: red;
     cursor: pointer;
 }
+
 .fa-trash-can:active {
     scale: 1;
     color: green;
@@ -249,4 +300,35 @@ button:hover {
     width: 100%;
     padding: 0.5em;
     font-size: 1.2rem;
+}
+
+#delete-decision-dialog {
+    width: 200px;
+    height: 100px;
+    padding: 0;
+    margin: 0 auto;
+    top: 4rem;
+}
+
+#delete-decision-div {
+    position: absolute;
+    width: 100%;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+#delete-decision-div > p {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+}
+
+#delete-decision-div > button {
+    width: 50px;
+    height: 30px;
 }
