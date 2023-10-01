@@ -56,70 +56,37 @@
                 <button id="create-garage-btn" disabled>Create Garage</button>
             </div>
         </section>
-        <div id="container">
-            <div id="block1" class="draggable"></div>
-            <div id="block2" class="draggable red"></div>
-          </div>
-        <script>
-            const container = document.getElementById('container');
+        <section id="garage-management-container">
+            <div id="vehicle-creation">
+                <button id="create-vehicle-btn">Create vehicle</button>
+            </div>
+            <div id="built-garage">
+                <h1 id="display-selected-garage-id">123</h1>
+                <div id="garage-slots">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </section>
 
-            container.addEventListener('mousedown', (e) => {
-                let isDragging = false;
-                let initialX, initialY;
-
-                const handleMouseMove = (event) => {
-                    if (!isDragging) {
-                        isDragging = true;
-                        // Add the 'dragging' class when the element is being dragged
-                        event.target.classList.add('dragging');
-                    }
-
-                    const dx = event.clientX - initialX;
-                    const dy = event.clientY - initialY;
-
-                    // Use CSS transforms for smoother dragging
-                    event.target.style.transform = `translate(${dx}px, ${dy}px)`;
-
-                    // Update initial coordinates for the next movement calculation
-                    initialX = event.clientX;
-                    initialY = event.clientY;
-                };
-
-                const handleMouseUp = () => {
-                    if (isDragging) {
-                        isDragging = false;
-                        // Remove the 'dragging' class when dragging is complete
-                        event.target.classList.remove('dragging');
-
-                        // Reset transform to clear the translate
-                        event.target.style.transform = '';
-                    }
-
-                    // Remove event listeners for mouse movement and release
-                    document.removeEventListener('mousemove', handleMouseMove);
-                    document.removeEventListener('mouseup', handleMouseUp);
-                };
-
-                initialX = e.clientX;
-                initialY = e.clientY;
-
-                // Throttle mousemove event to control update rate
-                document.addEventListener('mousemove', throttle(handleMouseMove, 16));
-                document.addEventListener('mouseup', handleMouseUp);
-            });
-
-            // Throttle function for optimizing mousemove event
-            function throttle(func, limit) {
-                let lastTime = 0;
-                return function () {
-                    const currentTime = new Date().getTime();
-                    if (currentTime - lastTime >= limit) {
-                        func.apply(null, arguments);
-                        lastTime = currentTime;
-                    }
-                };
-            }
-        </script>
     </main>
 </body>
 
