@@ -28,8 +28,8 @@ body {
     width: var(--container-width);
     border: 2px solid rgb(94, 82, 82);
     margin: 0 auto;
-    /* display: none; */
-    display: flex;
+    display: none;
+    /* display: flex; */
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
@@ -47,6 +47,12 @@ body {
     border: 2px solid black;
     padding: 1rem;
     gap: 1rem;
+}
+
+#garage-management-container {
+    width: var(--container-width);
+    display: grid;
+    grid-template-columns: 0.8fr 1fr;
 }
 
 
@@ -331,4 +337,34 @@ button:hover {
 #delete-decision-div > button {
     width: 50px;
     height: 30px;
+}
+
+#built-garage {
+    width: 100%;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem;
+}
+
+#display-selected-garage-id {
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+}
+
+#garage-slots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.1rem;
+}
+
+#garage-slots > div {
+    height: 30px;
+    width: 100px;
+    border: 2px solid green;
 }
