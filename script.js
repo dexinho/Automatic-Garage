@@ -6,13 +6,14 @@ const confirmCreationButton = document.querySelector('#confirm-creation-button')
 const newVehicleSlotDialog = document.querySelector('#new-vehicle-slot-dialog')
 const listOfCreatedVehiclesDiv = document.querySelector('#list-of-created-vehicles-div')
 const faTrashCans = document.getElementsByClassName('fa-trash-can')
-const createNewGarageBtn = document.querySelector('#build-new-garage-btn')
-const garageSelector = document.querySelector('#garage-selector')
+const buildNewGarage = document.querySelector('#build-new-garage-btn')
+const garageSelector = document.getElementById('garage-selector')
 const selectGarageContainer = document.querySelector('#select-garage-container')
 const setupGarageContainer = document.querySelector('#setup-garage-container')
 const returnToSelectBtn = document.querySelector('#return-to-select-btn')
 const refreshSelectionBtn = document.querySelector('#refresh-selection-btn')
 const garageID = document.querySelector('#garage-id-input')
+const continueBtn = document.querySelector('#continue-btn')
 const faShopSlash = document.querySelector('.fa-shop-slash')
 
 class Garage {
@@ -116,7 +117,7 @@ class Form {
     static placeholderArr = ['motorcycle', 'car', 'bicycle', 'bus', 'truck', 'plane', 'tank']
 
     static updateTrashCanListeners = () => {
-        Array.from(faTrashCans).forEach(can => {
+        [...faTrashCans].forEach(can => {
             can.addEventListener('click', (e) => {
 
                 const numberInput = e.target.previousElementSibling
@@ -162,9 +163,7 @@ class Form {
         garageID.value = ''
         createGarageBtn.disabled = true
 
-        while (listOfCreatedVehiclesDiv.childElementCount > 3) {
-            listOfCreatedVehiclesDiv.removeChild(listOfCreatedVehiclesDiv.lastElementChild)
-        }
+        this.removeChildren(listOfCreatedVehiclesDiv, 3)
     }
 
     static createProperties = () => {
@@ -181,12 +180,13 @@ class Form {
         return garageSlots
     }
 
-    static removeChildren = (element) => {
-        while (element.childElementCount > 1)
+    static removeChildren = (element, limit = 1) => {
+        while (element.childElementCount > limit)
             element.removeChild(element.lastElementChild)
     }
 
-    static showOrHideContinueAndSlashBtn = (garageSelector, continueBtn) => {
+    static showOrHideContinueAndSlashBtn = () => {
+
         if (garageSelector.value === 'select-garage') {
             faShopSlash.style.visibility = 'hidden'
             continueBtn.style.display = 'none'
@@ -199,10 +199,8 @@ class Form {
 
     static appendOptions = (garages) => {
 
-        const garageSelector = document.querySelector('#garage-selector')
-        const continueBtn = document.querySelector('#continue-btn')
         this.removeChildren(garageSelector)
-        this.showOrHideContinueAndSlashBtn(garageSelector, continueBtn)
+        this.showOrHideContinueAndSlashBtn()
 
         garages.forEach(garage => {
             const newOption = document.createElement('option')
@@ -211,37 +209,30 @@ class Form {
             garageSelector.appendChild(newOption)
         })
 
-        garageSelector.addEventListener('change', (e) => {
-            console.log(e.target.value)
-            this.showOrHideContinueAndSlashBtn(garageSelector, continueBtn)
-            e.stopImmediatePropagation()
-
-            continueBtn.addEventListener('click', (e) => {
-                e.stopImmediatePropagation()
-            })
-        })
-
         console.log(garages)
-
-        this.saveToLocalStorage(garages)
     }
 
-    static loadGaragesFromLocalStorage = () => {
-        const garages = JSON.parse(localStorage.getItem('garages')) || []
-
-        this.appendOptions(garages)
+    static loadFromLocalStorage = (key) => {
+        return JSON.parse(localStorage.getItem(key)) || []
     }
 
-    static saveToLocalStorage = (garages) => {
-        localStorage.setItem('garages', JSON.stringify(garages))
+    static saveToLocalStorage = (key, data) => {
+        localStorage.setItem(key, JSON.stringify(data))
     }
 
-    static deleteFromLocalStorage = () => {
-        const garageSelector = document.querySelector('#garage-selector')
-        const filteredGarages = JSON.parse(localStorage.getItem('garages'))
-            .filter(garage => garage.id !== garageSelector.value)
+    static deleteGarageFromLocalStorage = (ID) => {
+        const filteredData =  JSON.parse(localStorage.getItem('garages'))
+            .filter(garage => garage.id !== ID)
+        
+        this.saveToLocalStorage('garages', filteredData)
 
-        this.appendOptions(filteredGarages)
+        return filteredData
+
+    }
+
+    static buildGarage = (garageID) => {
+        const garages = this.loadFromLocalStorage('garages')
+        console.log(garages)
     }
 }
 
@@ -265,7 +256,8 @@ class Vehicle {
 }
 
 const deleteDecisionDialog = document.querySelector('#delete-decision-dialog')
-Form.loadGaragesFromLocalStorage()
+const createdGarages = Form.loadFromLocalStorage('garages')
+Form.appendOptions(createdGarages)
 
 faShopSlash.addEventListener('click', () => {
     const deletionChoiceButtons = document.querySelectorAll('.deletion-choice-btns')
@@ -274,7 +266,9 @@ faShopSlash.addEventListener('click', () => {
     deletionChoiceButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             if (e.target.id === 'delete-yes-btn') {
-                Form.deleteFromLocalStorage()
+                const garageSelector = document.querySelector('#garage-selector')
+                const filteredData = Form.deleteGarageFromLocalStorage(garageSelector.value)
+                Form.appendOptions(filteredData)
                 deleteDecisionDialog.close()
             }
             else if (e.target.id === 'delete-no-btn') deleteDecisionDialog.close()
@@ -299,14 +293,15 @@ createGarageBtn.addEventListener('click', () => {
         const properties = Form.createProperties()
         if (properties) {
             GARAGES_IN_LOCAL_STORAGE.push(new Garage(garageID.value, properties))
-            Form.saveToLocalStorage(GARAGES_IN_LOCAL_STORAGE)
+            Form.saveToLocalStorage('garages', GARAGES_IN_LOCAL_STORAGE)
+            Form.buildGarage(garageID.value)
         }
-    }
+    } else
 
-    console.log(GARAGES_IN_LOCAL_STORAGE)
+        console.log(GARAGES_IN_LOCAL_STORAGE)
 })
 
-createNewGarageBtn.addEventListener('click', () => {
+buildNewGarage.addEventListener('click', () => {
     selectGarageContainer.style.display = 'none'
     setupGarageContainer.style.display = 'flex'
 })
@@ -314,10 +309,16 @@ createNewGarageBtn.addEventListener('click', () => {
 returnToSelectBtn.addEventListener('click', () => {
     setupGarageContainer.style.display = 'none'
     selectGarageContainer.style.display = 'flex'
-    Form.loadGaragesFromLocalStorage()
+    const garages = Form.loadFromLocalStorage('garages')
+    Form.appendOptions(garages)
 })
 
 refreshSelectionBtn.addEventListener('click', Form.refreshInputs)
+garageSelector.addEventListener('change', Form.showOrHideContinueAndSlashBtn)
+continueBtn.addEventListener('click', Form.buildGarage)
+createGarageBtn.addEventListener('click', Form.buildGarage)
+
+
 
 // const bigGarage = new Garage(123, {
 //     car: 10,
