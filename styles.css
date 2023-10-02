@@ -13,6 +13,7 @@
 :root {
     --background: linear-gradient(20deg, white, skyblue);
     --container-width: 400px;
+    --vehicle-height: 2rem;
 }
 
 body {
@@ -50,9 +51,11 @@ body {
 }
 
 #garage-management-container {
+    margin: 0 auto;
     width: var(--container-width);
     display: grid;
-    grid-template-columns: 0.8fr 1fr;
+    grid-template-columns: 0.7fr 1fr;
+    column-gap: 1rem;
 }
 
 
@@ -327,14 +330,14 @@ button:hover {
     gap: 0.5rem;
 }
 
-#delete-decision-div > p {
+#delete-decision-div>p {
     padding: 0;
     margin: 0;
     width: 100%;
     text-align: center;
 }
 
-#delete-decision-div > button {
+#delete-decision-div>button {
     width: 50px;
     height: 30px;
 }
@@ -342,10 +345,9 @@ button:hover {
 #built-garage {
     width: 100%;
     border: 2px solid black;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2.5rem auto;
     padding: 0.5rem;
 }
 
@@ -355,16 +357,105 @@ button:hover {
     width: 100%;
 }
 
-#garage-slots {
+#garage-slots-container {
+    width: 100%;
+    gap: 0.2rem;
+}
+
+.garage-slot {
+    display: inline-block;
+    transition: scale 0.1s ease-in;
+    cursor: grab;
+    height: var(--vehicle-height);
+    width: 49%;
+    max-width: 200px;
+    border: 2px solid rgb(43, 97, 43);
+}
+
+.garage-slot:hover {
+    scale: 1.05;
+    border: 2px solid rgb(151, 65, 65);
+}
+
+.garage-slot:active {
+    scale: 1
+}
+
+#vehicle-creation {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0;
+}
+
+#vehicle-creation>label {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+#vehicle-creation input {
+    height: 30px;
+    margin-top: 0.2rem;
+    font-size: 1.1rem;
+    padding: 0.5rem;
+    width: 90%;
+    max-width: 200px;
+    border-radius: 0;
+}
+
+#create-vehicle-btn {
+    height: 50px;
+    font-size: 1.2rem;
+    width: 100%;
+    max-width: 200px;
+}
+
+#vehicles-ready-to-enter-garage {
+    width: 100%;
+    margin-top: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0.1rem;
+    gap: 0.5rem;
 }
 
-#garage-slots > div {
-    height: 30px;
-    width: 100px;
+[for='create-vehicle-btn'] {
+    width: 100%;
+}
+
+.created-vehicle {
+    width: 90%;
+    max-width: 200px;
+    height: var(--vehicle-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid purple;
+    padding: 0 0.5rem;
+    transition: scale 0.1s ease-in;
+}
+
+.created-vehicle:hover {
+    cursor: grab;
     border: 2px solid green;
+    scale: 1.05;
+}
+
+.fa-ban {
+    font-size: 1.2rem;
+    transition: scale 0.1s ease-in;
+}
+
+.fa-ban:hover {
+    scale: 1.1;
+    color: red;
+    cursor: pointer;
+}
+
+.created-vehicle-id-span {
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
 }
