@@ -58,31 +58,24 @@
         </section>
         <section id="garage-management-container">
             <div id="vehicle-creation">
-                <button id="create-vehicle-btn">Create vehicle</button>
+                <label for="vehicle-type">Type<input type="text" id="vehicle-type" placeholder="car"></label>
+                <label for="vehicle-registration">Registration<input type="text" id="vehicle-registration"
+                        placeholder="0010000123"></label>
+                <label for="vehicle-brand">Brand<input type="text" id="vehicle-brand" placeholder="Nissan"></label>
+                <label for="vehicle-model">Model<input type="text" id="vehicle-model" placeholder="Altima"></label>
+                <label for="vehicle-number-of-wheels">Number of wheels<input type="number" id="vehicle-number-of-wheels"
+                        min="1" max="12" placeholder="4" id="vehicle-number-of-wheels"></label>
+
+                <div id="vehicles-ready-to-enter-garage">
+                    <label for="create-vehicle-btn"><button id="create-vehicle-btn">Create vehicle</button></label>
+                </div>
             </div>
             <div id="built-garage">
                 <h1 id="display-selected-garage-id">123</h1>
-                <div id="garage-slots">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
+                <div id="garage-slots-container">
+                    <div draggable="true" class="garage-slot"></div>
+                    <div draggable="true" class="garage-slot"></div>
+                    <div draggable="true" class="garage-slot"></div>
                 </div>
             </div>
         </section>
