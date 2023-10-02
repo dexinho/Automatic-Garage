@@ -15,6 +15,9 @@ const refreshSelectionBtn = document.querySelector('#refresh-selection-btn')
 const garageID = document.querySelector('#garage-id-input')
 const continueBtn = document.querySelector('#continue-btn')
 const faShopSlash = document.querySelector('.fa-shop-slash')
+const createVehicleBtn = document.querySelector('#create-vehicle-btn')
+
+const CREATED_VEHICLES_ARR = []
 
 class Garage {
 
@@ -128,7 +131,7 @@ class Form {
                 listOfCreatedVehiclesDiv.removeChild(textInput)
 
                 e.stopImmediatePropagation()
-            }, { once: true })
+            })
         })
     }
 
@@ -221,9 +224,9 @@ class Form {
     }
 
     static deleteGarageFromLocalStorage = (ID) => {
-        const filteredData =  JSON.parse(localStorage.getItem('garages'))
+        const filteredData = JSON.parse(localStorage.getItem('garages'))
             .filter(garage => garage.id !== ID)
-        
+
         this.saveToLocalStorage('garages', filteredData)
 
         return filteredData
@@ -233,6 +236,49 @@ class Form {
     static buildGarage = (garageID) => {
         const garages = this.loadFromLocalStorage('garages')
         console.log(garages)
+    }
+
+    static createVehicle = () => {
+        const vehicleReadyToEnterGarage = document.querySelector('#vehicles-ready-to-enter-garage')
+        const vehicleType = document.querySelector('#vehicle-type')
+        const vehicleRegistration = document.querySelector('#vehicle-registration')
+        const vehicleBrand = document.querySelector('#vehicle-brand')
+        const vehicleModel = document.querySelector('#vehicle-model')
+        const vehicleNumOfWheels = document.querySelector('#vehicle-number-of-wheels')
+
+        const newVehicle = document.createElement('div')
+        const idForNewVehicle = document.createElement('span')
+        const deleteVehicle = document.createElement('i')
+
+        newVehicle.draggable = true
+        idForNewVehicle.textContent = vehicleRegistration.value
+
+        newVehicle.classList.add('created-vehicle')
+        idForNewVehicle.classList.add('created-vehicle-id-span')
+        deleteVehicle.classList.add('fa-solid', 'fa-ban')
+
+        deleteVehicle.addEventListener('click', () => {
+            const indexOfVehicleToDelete = CREATED_VEHICLES_ARR.findIndex(vehicle => vehicle.registration === idForNewVehicle.textContent)
+            vehicleReadyToEnterGarage.removeChild(deleteVehicle.parentElement)
+            CREATED_VEHICLES_ARR.splice(indexOfVehicleToDelete, 1)
+            console.log(CREATED_VEHICLES_ARR)
+        }, {once: true})
+
+        newVehicle.append(idForNewVehicle)
+        newVehicle.append(deleteVehicle)
+        vehicleReadyToEnterGarage.append(newVehicle)
+
+        if (CREATED_VEHICLES_ARR.every(vehicle => vehicle.registration !== vehicleRegistration.value)) {
+            CREATED_VEHICLES_ARR.push({
+                type: vehicleType.value,
+                registration: vehicleRegistration.value,
+                brand: vehicleBrand.value,
+                model: vehicleModel.value,
+                wheels: vehicleNumOfWheels.value,
+            })
+        }
+
+        console.log(CREATED_VEHICLES_ARR)
     }
 }
 
@@ -317,6 +363,7 @@ refreshSelectionBtn.addEventListener('click', Form.refreshInputs)
 garageSelector.addEventListener('change', Form.showOrHideContinueAndSlashBtn)
 continueBtn.addEventListener('click', Form.buildGarage)
 createGarageBtn.addEventListener('click', Form.buildGarage)
+createVehicleBtn.addEventListener('click', Form.createVehicle)
 
 
 
