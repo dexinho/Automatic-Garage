@@ -349,6 +349,8 @@ button:hover {
     grid-template-columns: 1fr;
     grid-template-rows: 2.5rem auto;
     padding: 0.5rem;
+    max-height: 380px;
+    transition: scale 0.1s ease-in;
 }
 
 #display-selected-garage-id {
@@ -418,14 +420,23 @@ button:hover {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 2rem;
 }
 
 [for='create-vehicle-btn'] {
     width: 100%;
 }
 
+.created-vehicle-slot {
+    width: 100%;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: 90% 10%;
+}
+
 .created-vehicle {
+    position: relative;
     width: 90%;
     max-width: 200px;
     height: var(--vehicle-height);
@@ -443,9 +454,14 @@ button:hover {
     scale: 1.05;
 }
 
+.created-vehicle > * {
+    pointer-events: none;
+}
+
 .fa-ban {
     font-size: 1.2rem;
     transition: scale 0.1s ease-in;
+    translate: .5rem;
 }
 
 .fa-ban:hover {
@@ -458,4 +474,50 @@ button:hover {
     font-size: 0.8rem;
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+    transform: translate(0, -0.3rem);
 }
+
+.wheel-one,
+.wheel-two {
+    position: absolute;
+    border-radius: 100px;
+    width: 30px;
+    height: 30px;
+    background-color: black;
+}
+
+.top-vehicle-part {
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    border-top: 2px solid black;
+    top: -15px;
+    left: 22px;
+}
+
+.wheel-one {
+    top: 15px;
+    left: 15px;
+}
+
+.wheel-two {
+    top: 15px;
+    right: 15px;
+}
+
+.inner-wheel {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: gray;
+    top: 5px;
+    left: 5px;
+}
+
+.change-garage {
+    scale: 1.01;
+    border: 2px solid red;
+}
+
