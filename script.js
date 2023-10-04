@@ -16,6 +16,14 @@ const garageID = document.querySelector('#garage-id-input')
 const continueBtn = document.querySelector('#continue-btn')
 const faShopSlash = document.querySelector('.fa-shop-slash')
 const createVehicleBtn = document.querySelector('#create-vehicle-btn')
+const vehicleRegistration = document.querySelector('#vehicle-registration')
+const vehicleReadyToEnterGarage = document.querySelector('#vehicles-ready-to-enter-garage')
+const vehicleType = document.querySelector('#vehicle-type')
+const vehicleBrand = document.querySelector('#vehicle-brand')
+const vehicleModel = document.querySelector('#vehicle-model')
+const vehicleNumOfWheels = document.querySelector('#vehicle-number-of-wheels')
+const builtGarage = document.querySelector('#built-garage')
+const garageSlotsContainer = document.querySelector('#garage-slots-container')
 
 const CREATED_VEHICLES_ARR = []
 
@@ -238,37 +246,12 @@ class Form {
         console.log(garages)
     }
 
-    static createVehicle = () => {
-        const vehicleReadyToEnterGarage = document.querySelector('#vehicles-ready-to-enter-garage')
-        const vehicleType = document.querySelector('#vehicle-type')
-        const vehicleRegistration = document.querySelector('#vehicle-registration')
-        const vehicleBrand = document.querySelector('#vehicle-brand')
-        const vehicleModel = document.querySelector('#vehicle-model')
-        const vehicleNumOfWheels = document.querySelector('#vehicle-number-of-wheels')
+    static isVehicleDuplicate = () => {
+        return CREATED_VEHICLES_ARR.every(vehicle => vehicle.registration !== vehicleRegistration.value)
+    }
 
-        const newVehicle = document.createElement('div')
-        const idForNewVehicle = document.createElement('span')
-        const deleteVehicle = document.createElement('i')
-
-        newVehicle.draggable = true
-        idForNewVehicle.textContent = vehicleRegistration.value
-
-        newVehicle.classList.add('created-vehicle')
-        idForNewVehicle.classList.add('created-vehicle-id-span')
-        deleteVehicle.classList.add('fa-solid', 'fa-ban')
-
-        deleteVehicle.addEventListener('click', () => {
-            const indexOfVehicleToDelete = CREATED_VEHICLES_ARR.findIndex(vehicle => vehicle.registration === idForNewVehicle.textContent)
-            vehicleReadyToEnterGarage.removeChild(deleteVehicle.parentElement)
-            CREATED_VEHICLES_ARR.splice(indexOfVehicleToDelete, 1)
-            console.log(CREATED_VEHICLES_ARR)
-        }, {once: true})
-
-        newVehicle.append(idForNewVehicle)
-        newVehicle.append(deleteVehicle)
-        vehicleReadyToEnterGarage.append(newVehicle)
-
-        if (CREATED_VEHICLES_ARR.every(vehicle => vehicle.registration !== vehicleRegistration.value)) {
+    static pushCreatedVehicle = () => {
+        if (this.isVehicleDuplicate()) {
             CREATED_VEHICLES_ARR.push({
                 type: vehicleType.value,
                 registration: vehicleRegistration.value,
@@ -277,8 +260,85 @@ class Form {
                 wheels: vehicleNumOfWheels.value,
             })
         }
+    }
 
-        console.log(CREATED_VEHICLES_ARR)
+    static addDeleteVehicleEventListener = (vehicle, id) => {
+        vehicle.addEventListener('click', () => {
+            const indexOfVehicleToDelete = CREATED_VEHICLES_ARR.findIndex(vehicle => vehicle.registration === id)
+            vehicleReadyToEnterGarage.removeChild(vehicle.parentElement)
+            CREATED_VEHICLES_ARR.splice(indexOfVehicleToDelete, 1)
+            console.log(CREATED_VEHICLES_ARR)
+        }, { once: true })
+    }
+
+    static createDragAndDrop = (vehicle) => {
+        vehicle.addEventListener('dragstart', (e) => {
+            console.log(vehicle)
+            e.dataTransfer.setData('text', e.target.id)
+            console.log('started')
+        })
+        vehicle.addEventListener('dragend', () => {
+            builtGarage.classList.remove('change-garage')
+        })
+    }
+
+    static garageDropEnabled = () => {
+        builtGarage.addEventListener('dragover', (e) => {
+            e.preventDefault()
+            builtGarage.classList.add('change-garage')
+        })
+        builtGarage.addEventListener('drop', (e) => {
+            e.preventDefault()
+            let data = e.dataTransfer.getData('text')
+            console.log(data)
+            garageSlotsContainer.append(document.getElementById(data))
+        })
+    }
+
+    static createDraggableVehicle = () => {
+
+        if (vehicleRegistration.value !== '' && this.isVehicleDuplicate()) {
+
+            const createdVehicleSlot = document.createElement('div')
+            const createdVehicle = document.createElement('div')
+            const idForNewVehicle = document.createElement('span')
+            const deleteVehicle = document.createElement('i')
+            const topVehiclePart = document.createElement('div')
+            const wheelOne = document.createElement('div')
+            const wheelTwo = document.createElement('div')
+            const innerWheelOne = document.createElement('div')
+            const innerWheelTwo = document.createElement('div')
+
+            createdVehicleSlot.classList.add('created-vehicle-slot')
+            createdVehicle.classList.add('created-vehicle')
+            idForNewVehicle.classList.add('created-vehicle-id-span')
+            deleteVehicle.classList.add('fa-solid', 'fa-ban')
+            topVehiclePart.classList.add('top-vehicle-part')
+            wheelOne.classList.add('wheel-one')
+            wheelTwo.classList.add('wheel-two')
+            innerWheelOne.classList.add('inner-wheel')
+            innerWheelTwo.classList.add('inner-wheel')
+
+            vehicleReadyToEnterGarage.append(createdVehicleSlot)
+            createdVehicleSlot.append(createdVehicle)
+            createdVehicleSlot.append(deleteVehicle)
+            createdVehicle.append(idForNewVehicle)
+            createdVehicle.append(topVehiclePart)
+            createdVehicle.append(wheelOne)
+            createdVehicle.append(wheelTwo)
+            wheelOne.append(innerWheelOne)
+            wheelTwo.append(innerWheelTwo)
+
+            createdVehicle.draggable = true
+            idForNewVehicle.textContent = vehicleRegistration.value
+            createdVehicle.id = CREATED_VEHICLES_ARR.length
+
+            this.pushCreatedVehicle()
+            this.addDeleteVehicleEventListener(deleteVehicle, idForNewVehicle.textContent)
+            this.createDragAndDrop(createdVehicle)
+
+            console.log(CREATED_VEHICLES_ARR)
+        }
     }
 }
 
@@ -363,7 +423,8 @@ refreshSelectionBtn.addEventListener('click', Form.refreshInputs)
 garageSelector.addEventListener('change', Form.showOrHideContinueAndSlashBtn)
 continueBtn.addEventListener('click', Form.buildGarage)
 createGarageBtn.addEventListener('click', Form.buildGarage)
-createVehicleBtn.addEventListener('click', Form.createVehicle)
+createVehicleBtn.addEventListener('click', Form.createDraggableVehicle)
+Form.garageDropEnabled()
 
 
 
