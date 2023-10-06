@@ -24,7 +24,12 @@ const vehicleModel = document.querySelector('#vehicle-model')
 const vehicleNumOfWheels = document.querySelector('#vehicle-number-of-wheels')
 const builtGarage = document.querySelector('#built-garage')
 const garageSlotsContainer = document.querySelector('#garage-slots-container')
+const garageSlot = document.getElementsByClassName('garage-slot')
+const garageManagementContainer = document.querySelector('#garage-management-container')
+const displaySelectedGarageId = document.querySelector('#display-selected-garage-id')
+const returnToSelectGarageCointerBtn = document.querySelector('#return-to-select-garage-cointer-btn')
 
+const VEHICLE_TYPES = []
 const CREATED_VEHICLES_ARR = []
 
 class Garage {
@@ -41,7 +46,7 @@ class Garage {
         }
     }
 
-    add = (vehicle) => {
+    park = (vehicle) => {
         const vehicleType = vehicle.constructor.name.toLowerCase()
         const allVehiclesParked = this.vehiclesParked // da li se moze vani deklarisati da se ne bi svaki put deklarisalo unutar metoda
 
@@ -223,11 +228,11 @@ class Form {
         console.log(garages)
     }
 
-    static loadFromLocalStorage = (key) => {
+    static loadItemFromLocalStorage = (key) => {
         return JSON.parse(localStorage.getItem(key)) || []
     }
 
-    static saveToLocalStorage = (key, data) => {
+    static saveItemToLocalStorage = (key, data) => {
         localStorage.setItem(key, JSON.stringify(data))
     }
 
@@ -235,14 +240,21 @@ class Form {
         const filteredData = JSON.parse(localStorage.getItem('garages'))
             .filter(garage => garage.id !== ID)
 
-        this.saveToLocalStorage('garages', filteredData)
+        this.saveItemToLocalStorage('garages', filteredData)
 
         return filteredData
 
     }
 
     static buildGarage = (garageID) => {
-        const garages = this.loadFromLocalStorage('garages')
+        const garages = this.loadItemFromLocalStorage('garages')
+        setupGarageContainer.style.display = 'none'
+        selectGarageContainer.style.display = 'none'
+        garageManagementContainer.style.display = 'grid'
+
+        if (garageID) displaySelectedGarageId.innerText = 'Garage ' + garageID
+        else displaySelectedGarageId.innerText = 'Garage ' + garageSelector.value
+
         console.log(garages)
     }
 
@@ -262,10 +274,11 @@ class Form {
         }
     }
 
-    static addDeleteVehicleEventListener = (vehicle, id) => {
+    static attachDeleteVehicleEventListener = (vehicle, id) => {
         vehicle.addEventListener('click', () => {
             const indexOfVehicleToDelete = CREATED_VEHICLES_ARR.findIndex(vehicle => vehicle.registration === id)
-            vehicleReadyToEnterGarage.removeChild(vehicle.parentElement)
+            const vehicleSlot = vehicle.parentElement
+            vehicleSlot.parentElement.removeChild(vehicleSlot)
             CREATED_VEHICLES_ARR.splice(indexOfVehicleToDelete, 1)
             console.log(CREATED_VEHICLES_ARR)
         }, { once: true })
@@ -274,7 +287,7 @@ class Form {
     static createDragAndDrop = (vehicle) => {
         vehicle.addEventListener('dragstart', (e) => {
             console.log(vehicle)
-            e.dataTransfer.setData('text', e.target.id)
+            e.dataTransfer.setData('car', e.target.id)
             console.log('started')
         })
         vehicle.addEventListener('dragend', () => {
@@ -283,15 +296,40 @@ class Form {
     }
 
     static garageDropEnabled = () => {
+
         builtGarage.addEventListener('dragover', (e) => {
             e.preventDefault()
             builtGarage.classList.add('change-garage')
         })
         builtGarage.addEventListener('drop', (e) => {
-            e.preventDefault()
-            let data = e.dataTransfer.getData('text')
-            console.log(data)
-            garageSlotsContainer.append(document.getElementById(data))
+            let data = e.dataTransfer.getData('car')
+            const car = document.getElementById(data)
+            garageSlotsContainer.append(car)
+
+
+            let Type = Vehicle.createdTypes.find(type => type.name === vehicleType.value)
+
+            if (!Type) {
+                Type = Vehicle.createNewType(vehicleType.value)
+                Vehicle.storeType(Type)
+            }
+
+            const vehicle = new Type({
+                registration: vehicleRegistration,
+                model: vehicleModel,
+                brand: vehicleBrand,
+                numberOfWheels: vehicleNumOfWheels,
+            })
+
+            const garageItems = Form.loadItemFromLocalStorage('garages')
+            console.log(garageItems)
+
+            Array.from(garageSlotsContainer.children).forEach(slot => {
+                slot.draggable = false
+                slot.style.width = '49%'
+                slot.classList.add('garage-slot')
+            })
+
         })
     }
 
@@ -321,21 +359,21 @@ class Form {
 
             vehicleReadyToEnterGarage.append(createdVehicleSlot)
             createdVehicleSlot.append(createdVehicle)
-            createdVehicleSlot.append(deleteVehicle)
             createdVehicle.append(idForNewVehicle)
+            createdVehicle.append(deleteVehicle)
             createdVehicle.append(topVehiclePart)
             createdVehicle.append(wheelOne)
             createdVehicle.append(wheelTwo)
             wheelOne.append(innerWheelOne)
             wheelTwo.append(innerWheelTwo)
 
-            createdVehicle.draggable = true
+            createdVehicleSlot.draggable = true
             idForNewVehicle.textContent = vehicleRegistration.value
-            createdVehicle.id = CREATED_VEHICLES_ARR.length
+            createdVehicleSlot.id = CREATED_VEHICLES_ARR.length
 
             this.pushCreatedVehicle()
-            this.addDeleteVehicleEventListener(deleteVehicle, idForNewVehicle.textContent)
-            this.createDragAndDrop(createdVehicle)
+            this.attachDeleteVehicleEventListener(createdVehicle, idForNewVehicle.textContent)
+            this.createDragAndDrop(createdVehicleSlot)
 
             console.log(CREATED_VEHICLES_ARR)
         }
@@ -344,6 +382,9 @@ class Form {
 
 
 class Vehicle {
+
+    static createdTypes = []
+
     constructor({ registration, model, brand, numberOfWheels }) {
         this.registration = registration
         this.model = model
@@ -352,6 +393,7 @@ class Vehicle {
     }
 
     static createNewType = (typeName) => {
+
         return class extends Vehicle {
             static name = typeName
             constructor(args) {
@@ -359,10 +401,17 @@ class Vehicle {
             }
         }
     }
+
+    static storeType = (newType) => {
+        if (this.createdTypes.every(type => type.name !== newType.name))
+            this.createdTypes.push(newType)
+
+        console.log(this.createdTypes)
+    }
 }
 
 const deleteDecisionDialog = document.querySelector('#delete-decision-dialog')
-const createdGarages = Form.loadFromLocalStorage('garages')
+const createdGarages = Form.loadItemFromLocalStorage('garages')
 Form.appendOptions(createdGarages)
 
 faShopSlash.addEventListener('click', () => {
@@ -384,6 +433,17 @@ faShopSlash.addEventListener('click', () => {
     })
 })
 
+const testObj = {
+    hi: 'hi',
+    test(){
+        return 'test'
+    }
+}
+
+localStorage.setItem('test', JSON.stringify(testObj))
+
+console.log(localStorage.getItem('test'))
+
 
 addVehicleSlotBtn.addEventListener('click', Form.createNewInput)
 
@@ -393,18 +453,20 @@ garageID.addEventListener('change', () => {
 
 createGarageBtn.addEventListener('click', () => {
 
-    const GARAGES_IN_LOCAL_STORAGE = JSON.parse(localStorage.getItem('garages')) || []
+    const garagesStoredInLocalStorage = JSON.parse(localStorage.getItem('garages')) || []
 
-    if (GARAGES_IN_LOCAL_STORAGE.every(garage => garage.id !== garageID.value)) {
+    if (garagesStoredInLocalStorage.every(garage => garage.id !== garageID.value)) {
         const properties = Form.createProperties()
         if (properties) {
-            GARAGES_IN_LOCAL_STORAGE.push(new Garage(garageID.value, properties))
-            Form.saveToLocalStorage('garages', GARAGES_IN_LOCAL_STORAGE)
+            garagesStoredInLocalStorage.push(new Garage(garageID.value, properties))
+
+            Form.saveItemToLocalStorage('garages', garagesStoredInLocalStorage)
             Form.buildGarage(garageID.value)
         }
-    } else
+    }
 
-        console.log(GARAGES_IN_LOCAL_STORAGE)
+    console.log(garagesStoredInLocalStorage)
+    console.log(JSON.parse(localStorage.getItem('garages')))
 })
 
 buildNewGarage.addEventListener('click', () => {
@@ -415,16 +477,22 @@ buildNewGarage.addEventListener('click', () => {
 returnToSelectBtn.addEventListener('click', () => {
     setupGarageContainer.style.display = 'none'
     selectGarageContainer.style.display = 'flex'
-    const garages = Form.loadFromLocalStorage('garages')
+    const garages = Form.loadItemFromLocalStorage('garages')
     Form.appendOptions(garages)
 })
 
 refreshSelectionBtn.addEventListener('click', Form.refreshInputs)
 garageSelector.addEventListener('change', Form.showOrHideContinueAndSlashBtn)
-continueBtn.addEventListener('click', Form.buildGarage)
-createGarageBtn.addEventListener('click', Form.buildGarage)
+continueBtn.addEventListener('click', () => {
+    Form.buildGarage()
+})
 createVehicleBtn.addEventListener('click', Form.createDraggableVehicle)
 Form.garageDropEnabled()
+returnToSelectGarageCointerBtn.addEventListener('click', () => {
+    setupGarageContainer.style.display = 'none'
+    garageManagementContainer.style.display = 'none'
+    selectGarageContainer.style.display = 'flex'
+})
 
 
 
