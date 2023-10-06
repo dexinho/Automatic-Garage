@@ -433,18 +433,6 @@ faShopSlash.addEventListener('click', () => {
     })
 })
 
-const testObj = {
-    hi: 'hi',
-    test(){
-        return 'test'
-    }
-}
-
-localStorage.setItem('test', JSON.stringify(testObj))
-
-console.log(localStorage.getItem('test'))
-
-
 addVehicleSlotBtn.addEventListener('click', Form.createNewInput)
 
 garageID.addEventListener('change', () => {
