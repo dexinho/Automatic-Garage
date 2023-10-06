@@ -446,12 +446,6 @@ button:hover {
     border-radius: 0;
 }
 
-#create-vehicle-btn {
-    height: 50px;
-    font-size: 1.2rem;
-    width: 90%;
-    max-width: 200px;
-}
 
 #vehicles-ready-to-enter-garage {
     width: 100%;
@@ -461,6 +455,13 @@ button:hover {
     align-items: center;
     flex-wrap: wrap;
     gap: 2rem;
+}
+
+#create-vehicle-btn {
+    height: 50px;
+    font-size: 1.2rem;
+    width: 90%;
+    max-width: 200px;
 }
 
 [for='create-vehicle-btn'] {
@@ -494,10 +495,6 @@ button:hover {
     scale: 1.05;
 }
 
-.created-vehicle>*:not(.fa-ban) {
-    pointer-events: none;
-}
-
 .fa-ban {
     font-size: 1.2rem;
     transition: scale 0.1s ease-in;
@@ -509,6 +506,10 @@ button:hover {
     scale: 1.1;
     color: red;
     cursor: pointer;
+}
+
+.created-vehicle>*:not(.fa-ban) {
+    pointer-events: none;
 }
 
 .created-vehicle-id-span {
@@ -572,6 +573,11 @@ button:hover {
     border: 2px solid rgb(42, 78, 38);
 }
 
+.continue-and-build-btn {
+    font-size: 1.2rem !important;
+    font-weight: bold;
+}
+
 .fa-angles-left {
     height: 30px;
     width: 4rem;
@@ -580,9 +586,4 @@ button:hover {
     align-items: center;
     justify-content: center;
     color: white;
-}
-
-.continue-and-build-btn {
-    font-size: 1.2rem !important;
-    font-weight: bold;
 }
