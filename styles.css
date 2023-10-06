@@ -14,6 +14,7 @@
     --background: linear-gradient(20deg, white, skyblue);
     --container-width: 400px;
     --vehicle-height: 2rem;
+    --created-vehicle-width: 130px;
 }
 
 body {
@@ -24,18 +25,33 @@ body {
     background-repeat: no-repeat;
 }
 
+main {
+    min-width: var(--container-width);
+    width: 50%;
+    max-width: calc(var(--container-width) + 300px);
+    margin: 0 auto;
+}
+
+#select-garage-container,
+#setup-garage-container,
+#garage-management-container {
+    min-width: var(--container-width);
+    width: calc(var(--container-width) + 300px);
+    max-width: calc(var(--container-width) + 300px);
+
+}
+
 #select-garage-container {
-    margin: auto;
-    width: var(--container-width);
     border: 2px solid rgb(94, 82, 82);
     margin: 0 auto;
-    display: none;
-    /* display: flex; */
+    /* display: none; */
+    display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
     padding: 1rem;
+    width: 100%;
 }
 
 #setup-garage-container {
@@ -44,23 +60,25 @@ body {
     /* display: flex; */
     justify-content: center;
     flex-wrap: wrap;
-    width: var(--container-width);
     border: 2px solid black;
     padding: 1rem;
     gap: 1rem;
+    width: 100%;
 }
 
 #garage-management-container {
+    width: 100%;
     margin: 0 auto;
-    width: var(--container-width);
-    display: grid;
-    grid-template-columns: 0.7fr 1fr;
+    display: none;
+    /* display: grid; */
+    grid-template-columns: minmax(100px, 0.3fr) minmax(150px, 1fr);
     column-gap: 1rem;
 }
 
 
 #select-garage-container>* {
-    width: 100%;
+    width: 50%;
+    min-width: 250px;
     height: 2.5rem;
     padding: 0.5rem;
     font-size: 1rem;
@@ -146,6 +164,8 @@ body {
 }
 
 #garage-selector-div {
+    width: 50%;
+    min-width: 350px;
     position: relative;
     height: 4rem;
     display: flex;
@@ -246,12 +266,12 @@ body {
 
 #create-garage-btn:hover {
     background: linear-gradient(220deg, rgb(169, 169, 248), rgb(252, 120, 120));
-    scale: 1.05;
+    scale: 1.02;
 }
 
 #add-vehicle-slot-btn:hover {
     background: linear-gradient(20deg, rgb(169, 169, 248), rgb(252, 120, 120));
-    scale: 1.05;
+    scale: 1.02;
 }
 
 #garage-id-input {
@@ -344,39 +364,59 @@ button:hover {
 
 #built-garage {
     width: 100%;
-    border: 2px solid black;
+    border: 2px solid rgb(211, 143, 143);
+    box-shadow: 0px 0px 2px 2px rgb(211, 143, 143);
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 2.5rem auto;
     padding: 0.5rem;
-    max-height: 380px;
+    max-height: 370px;
     transition: scale 0.1s ease-in;
+    margin-top: 2rem;
 }
 
 #display-selected-garage-id {
-    margin: 0 auto;
-    text-align: center;
     width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(139, 67, 102);
+    border-bottom: 2px solid rgb(211, 143, 143);
+    border-inline: 2px solid rgb(211, 143, 143);
+    box-shadow: 0px 0px 2px 2px rgb(211, 143, 143);
 }
 
 #garage-slots-container {
-    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 0.2rem;
+    margin-top: 2rem;
+}
+
+@media (width > 950px) {
+    #garage-slots-container {
+        gap: 2rem;
+    }
+
+    #built-garage {
+        max-height: 350px;
+    }
 }
 
 .garage-slot {
-    display: inline-block;
+    display: block;
+    width: var(--created-vehicle-width) !important;
+    cursor: help !important;
     transition: scale 0.1s ease-in;
-    cursor: grab;
     height: var(--vehicle-height);
-    width: 49%;
-    max-width: 200px;
-    border: 2px solid rgb(43, 97, 43);
+    cursor: grab;
 }
 
 .garage-slot:hover {
     scale: 1.05;
-    border: 2px solid rgb(151, 65, 65);
 }
 
 .garage-slot:active {
@@ -409,7 +449,7 @@ button:hover {
 #create-vehicle-btn {
     height: 50px;
     font-size: 1.2rem;
-    width: 100%;
+    width: 90%;
     max-width: 200px;
 }
 
@@ -428,7 +468,7 @@ button:hover {
 }
 
 .created-vehicle-slot {
-    width: 100%;
+    width: var(--created-vehicle-width);
     display: grid;
     justify-content: center;
     align-items: center;
@@ -437,7 +477,7 @@ button:hover {
 
 .created-vehicle {
     position: relative;
-    width: 90%;
+    width: var(--created-vehicle-width);
     max-width: 200px;
     height: var(--vehicle-height);
     display: flex;
@@ -454,14 +494,15 @@ button:hover {
     scale: 1.05;
 }
 
-.created-vehicle > * {
+.created-vehicle>*:not(.fa-ban) {
     pointer-events: none;
 }
 
 .fa-ban {
     font-size: 1.2rem;
     transition: scale 0.1s ease-in;
-    translate: .5rem;
+    translate: 1rem -1.8rem;
+    color: rgb(129, 141, 61);
 }
 
 .fa-ban:hover {
@@ -476,7 +517,7 @@ button:hover {
     align-items: center;
     justify-content: center;
     width: 100%;
-    transform: translate(0, -0.3rem);
+    transform: translate(0.5rem, -0.3rem);
 }
 
 .wheel-one,
@@ -521,3 +562,27 @@ button:hover {
     border: 2px solid red;
 }
 
+#return-to-select-garage-cointer-btn {
+    background: linear-gradient(120deg, rgb(167, 76, 76), rgb(56, 56, 151));
+    transition: scale 0.1s ease-in;
+}
+
+#return-to-select-garage-cointer-btn:hover {
+    scale: 1.1;
+    border: 2px solid rgb(42, 78, 38);
+}
+
+.fa-angles-left {
+    height: 30px;
+    width: 4rem;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.continue-and-build-btn {
+    font-size: 1.2rem !important;
+    font-weight: bold;
+}
