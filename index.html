@@ -30,8 +30,8 @@
                 </dialog>
                 <i class="fa-solid fa-shop-slash"></i>
             </div>
-            <button id="continue-btn">Continue</button>
-            <button id="build-new-garage-btn">Build New Garage</button>
+            <button class='continue-and-build-btn' id="continue-btn">CONTINUE</button>
+            <button class='continue-and-build-btn' id="build-new-garage-btn">BUILD NEW GARAGE</button>
         </section>
         <section id="setup-garage-container">
             <div id="garage-id-div">
@@ -58,6 +58,7 @@
         </section>
         <section id="garage-management-container">
             <div id="vehicle-creation">
+                <label for="return-to-select-garage-cointer-btn"><button id="return-to-select-garage-cointer-btn"><i class="fa-solid fa-angles-left"></i></button></label>
                 <label for="vehicle-type">Type<input type="text" id="vehicle-type" placeholder="car"></label>
                 <label for="vehicle-registration">Registration<input type="text" id="vehicle-registration"
                         placeholder="0010000123" minlength="1" maxlength="8"></label>
@@ -71,11 +72,11 @@
                 </div>
             </div>
             <div id="built-garage">
-                <h1 id="display-selected-garage-id">123</h1>
+                <h1 id="display-selected-garage-id"></h1>
                 <div id="garage-slots-container">
+                    <!-- <div draggable="true" class="garage-slot"></div>
                     <div draggable="true" class="garage-slot"></div>
-                    <div draggable="true" class="garage-slot"></div>
-                    <div draggable="true" class="garage-slot"></div>
+                    <div draggable="true" class="garage-slot"></div> -->
                 </div>
             </div>
         </section>
