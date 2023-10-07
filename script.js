@@ -59,7 +59,7 @@ class Garage {
     }
 
 
-    remove = (vehicle) => {
+    removeParked = (vehicle) => {
         const vehicleType = vehicle.constructor.name.toLowerCase()
         const allVehiclesParked = this.vehiclesParked
 
@@ -72,7 +72,7 @@ class Garage {
         })
     }
 
-    findVehicleByRegistrationNumber = (registrationNumber) => {
+    findByRegistrationNumber = (registrationNumber) => {
         const allVehiclesParked = this.vehiclesParked
         for (const vehicleType in allVehiclesParked) {
             if (allVehiclesParked[vehicleType].find(vehicle => vehicle.registration === registrationNumber)) {
