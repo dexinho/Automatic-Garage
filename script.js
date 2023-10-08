@@ -105,7 +105,7 @@ class Garage {
         }
     }
 
-    showFreeParkingSpaces = () => {
+    freeParkingSpaces = () => {
         const { vehiclesParked } = this
         for (const vehicleType in vehiclesParked) {
             console.log(`${vehicleType}: ${this[vehicleType] - vehiclesParked[vehicleType]?.length}`)
