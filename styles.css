@@ -75,6 +75,9 @@ main {
     column-gap: 1rem;
 }
 
+button:hover {
+    cursor: pointer;
+}
 
 #select-garage-container>* {
     width: 50%;
@@ -250,7 +253,7 @@ main {
 }
 
 #add-vehicle-slot-btn {
-    background: linear-gradient(220deg, rgb(169, 169, 248), rgb(252, 120, 120));
+    background: linear-gradient(220deg, rgb(150, 150, 226), rgb(252, 120, 120));
     color: whitesmoke;
     transition: scale 0.1s ease-in;
     font-weight: bold;
@@ -258,7 +261,7 @@ main {
 }
 
 #create-garage-btn {
-    background: linear-gradient(20deg, rgb(169, 169, 248), rgb(252, 120, 120));
+    background: linear-gradient(20deg, rgb(155, 155, 224), rgb(219, 114, 114));
     color: whitesmoke;
     transition: scale 0.1s ease-in;
     font-weight: bold;
@@ -295,10 +298,6 @@ main {
 #list-description-div {
     padding: 0;
     gap: 0;
-}
-
-button:hover {
-    cursor: pointer;
 }
 
 .fa-trash-can {
