@@ -37,13 +37,17 @@ class Garage {
     constructor(id, parkingSpacesPerVehicle) {
 
         this.id = id
-        this.vehiclesParked = {}
+        this.vehiclesParked = this.loadGarageFromLocalStorage()[id] || {}
 
         for (const key in parkingSpacesPerVehicle) {
             this[key] = parkingSpacesPerVehicle[key]
             if (Object.keys(this.vehiclesParked).length < Object.keys(parkingSpacesPerVehicle).length)
                 this.vehiclesParked[key] = []
         }
+    }
+
+    loadGarageFromLocalStorage(){
+        return JSON.parse(localStorage.getItem('garages'))
     }
 
     park = (vehicle) => {
@@ -148,7 +152,7 @@ class Form {
         })
     }
 
-    static createNewInput = () => {
+    static createNewVehicleInput = () => {
         const typeInput = document.createElement('input')
         const slotInput = document.createElement('input')
         const trashCan = document.createElement('i')
@@ -301,18 +305,13 @@ class Form {
             e.preventDefault()
             builtGarage.classList.add('change-garage')
         })
+
         builtGarage.addEventListener('drop', (e) => {
             let data = e.dataTransfer.getData('car')
             const car = document.getElementById(data)
             garageSlotsContainer.append(car)
 
-
-            let Type = Vehicle.createdTypes.find(type => type.name === vehicleType.value)
-
-            if (!Type) {
-                Type = Vehicle.createNewType(vehicleType.value)
-                Vehicle.storeType(Type)
-            }
+            const Type = Vehicle.createNewType(vehicleType.value)
 
             const vehicle = new Type({
                 registration: vehicleRegistration,
@@ -321,15 +320,14 @@ class Form {
                 numberOfWheels: vehicleNumOfWheels,
             })
 
-            const garageItems = Form.loadItemFromLocalStorage('garages')
-            console.log(garageItems)
+            const garage = new Garage({id: garageSelector.value})
+            console.log(garage)
 
             Array.from(garageSlotsContainer.children).forEach(slot => {
                 slot.draggable = false
                 slot.style.width = '49%'
                 slot.classList.add('garage-slot')
             })
-
         })
     }
 
@@ -402,12 +400,12 @@ class Vehicle {
         }
     }
 
-    static storeType = (newType) => {
-        if (this.createdTypes.every(type => type.name !== newType.name))
-            this.createdTypes.push(newType)
+    // static storeType = (newType) => {
+    //     if (this.createdTypes.every(type => type.name !== newType.name))
+    //         this.createdTypes.push(newType)
 
-        console.log(this.createdTypes)
-    }
+    //     console.log(this.createdTypes)
+    // }
 }
 
 const deleteDecisionDialog = document.querySelector('#delete-decision-dialog')
@@ -433,7 +431,7 @@ faShopSlash.addEventListener('click', () => {
     })
 })
 
-addVehicleSlotBtn.addEventListener('click', Form.createNewInput)
+addVehicleSlotBtn.addEventListener('click', Form.createNewVehicleInput)
 
 garageID.addEventListener('change', () => {
     createGarageBtn.disabled = garageID.value === ''
