@@ -32,7 +32,7 @@ const returnToSelectGarageCointerBtn = document.querySelector('#return-to-select
 const VEHICLE_TYPES = []
 const CREATED_VEHICLES_ARR = []
 
-localStorage.clear()
+// localStorage.clear()
 
 class Garage {
 
@@ -407,7 +407,6 @@ class Form {
     }
 }
 
-
 class Vehicle {
 
     static createdTypes = []
@@ -429,12 +428,12 @@ class Vehicle {
         }
     }
 
-    // static storeType = (newType) => {
-    //     if (this.createdTypes.every(type => type.name !== newType.name))
-    //         this.createdTypes.push(newType)
+    static storeType = (newType) => {
+        if (this.createdTypes.every(type => type.name !== newType.name))
+            this.createdTypes.push(newType)
 
-    //     console.log(this.createdTypes)
-    // }
+        console.log(this.createdTypes)
+    }
 }
 
 const deleteDecisionDialog = document.querySelector('#delete-decision-dialog')
@@ -512,20 +511,18 @@ returnToSelectGarageCointerBtn.addEventListener('click', () => {
     selectGarageContainer.style.display = 'flex'
 })
 
+const bigGarage = new Garage(123, {
+    car: 10,
+    bike: 5,
+    truck: 2,
+})
 
-
-// const bigGarage = new Garage(123, {
-//     car: 10,
-//     bike: 5,
-//     truck: 2,
-// })
-
-// const car1 = new Car({
-//     registration: 12788,
-//     model: 'altima',
-//     brand: 'nissan',
-//     numberOfWheels: 4,
-// })
+const car1 = new Car({
+    registration: 12788,
+    model: 'altima',
+    brand: 'nissan',
+    numberOfWheels: 4,
+})
 
 // bigGarage.add(car1)
 
