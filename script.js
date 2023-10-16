@@ -524,18 +524,18 @@ const car1 = new Car({
     numberOfWheels: 4,
 })
 
-// bigGarage.add(car1)
+bigGarage.add(car1)
 
-// bigGarage.remove(car1)
+bigGarage.remove(car1)
 
-// bigGarage.findVehicleByRegistrationNumber(66224)
-// bigGarage.showAllVehiclesParked()
-// bigGarage.showFreeParkingSpaces()
+bigGarage.findVehicleByRegistrationNumber(66224)
+bigGarage.showAllVehiclesParked()
+bigGarage.showFreeParkingSpaces()
 
-// bigGarage.resetGarageWithNewSlots = {
-//     truck: 1,
-//     car: 1,
-// }
+bigGarage.resetGarageWithNewSlots = {
+    truck: 1,
+    car: 1,
+}
 
 
 
