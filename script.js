@@ -27,12 +27,12 @@ const garageSlotsContainer = document.querySelector('#garage-slots-container')
 const garageSlot = document.getElementsByClassName('garage-slot')
 const garageManagementContainer = document.querySelector('#garage-management-container')
 const displaySelectedGarageId = document.querySelector('#display-selected-garage-id')
-const returnToSelectGarageCointerBtn = document.querySelector('#return-to-select-garage-cointer-btn')
+const returnToSelectGarageConteinerBtn = document.querySelector('#return-to-select-garage-cointer-btn')
 
 const VEHICLE_TYPES = []
 const CREATED_VEHICLES_ARR = []
 
-// localStorage.clear()
+localStorage.clear()
 
 class Garage {
 
@@ -48,12 +48,12 @@ class Garage {
         }
     }
 
-    loadGarageFromLocalStorage(){
+    loadGarageFromLocalStorage() {
         const data = JSON.parse(localStorage.getItem('garages'))
         return data
     }
 
-    saveGarageToLocalStorage(){
+    saveGarageToLocalStorage() {
         const garage = this.loadGarageFromLocalStorage()
         const foundIndex = garage.findIndex(el => el.id === this.id)
 
@@ -70,7 +70,7 @@ class Garage {
     park = (vehicle) => {
         const vehicleType = vehicle.constructor.name.toLowerCase()
         const maxSlots = this.vehiclesParked[vehicleType]
-        const vehiclesParked = this.vehiclesParked.vehiclesParked // da li se moze vani deklarisati da se ne bi svaki put deklarisalo unutar metoda
+        const vehiclesParked = this.vehiclesParked.vehiclesParked
 
         console.log(vehicle)
         console.log(this)
@@ -82,8 +82,10 @@ class Garage {
             vehiclesParked[vehicleType].push(vehicle)
             console.log(`${vehicleType[0].toUpperCase() + vehicleType.slice(1)} is parked with registration number: ${vehicle.registration}`)
             this.saveGarageToLocalStorage()
+            return true
         }
-        else if (vehiclesParked[vehicleType]?.length > maxSlots) console.log(`There is no more parking space for ${vehicleType}s`)
+        // else if (vehiclesParked[vehicleType]?.length >= maxSlots) console.log(`There is no parking space for ${vehicleType}s`)
+        else console.log(`There is no parking space for ${vehicleType}s`)
 
     }
 
@@ -331,12 +333,8 @@ class Form {
     static garageDropEnabled = () => {
 
         builtGarage.addEventListener('drop', (e) => {
-            let data = e.dataTransfer.getData('car')
-            const car = document.getElementById(data)
-            garageSlotsContainer.append(car)
 
             const Type = Vehicle.createNewType(vehicleType.value)
-
             const vehicle = new Type({
                 registration: vehicleRegistration.value,
                 model: vehicleModel.value,
@@ -345,13 +343,19 @@ class Form {
             })
 
             const garage = new Garage(displaySelectedGarageId.textContent)
-            garage.park(vehicle)
 
-            Array.from(garageSlotsContainer.children).forEach(slot => {
-                slot.draggable = false
-                slot.style.width = '49%'
-                slot.classList.add('garage-slot')
-            })
+            if (garage.park(vehicle)) {
+                let data = e.dataTransfer.getData('car')
+                const car = document.getElementById(data)
+                garageSlotsContainer.append(car)
+
+                Array.from(garageSlotsContainer.children).forEach(slot => {
+                    slot.draggable = false
+                    slot.style.width = '49%'
+                    slot.classList.add('garage-slot')
+                })
+            }
+
         })
 
         builtGarage.addEventListener('dragover', (e) => {
@@ -359,7 +363,7 @@ class Form {
             builtGarage.classList.add('change-garage')
         })
 
-        
+
     }
 
     static createDraggableVehicle = () => {
@@ -505,37 +509,37 @@ continueBtn.addEventListener('click', () => {
 })
 createVehicleBtn.addEventListener('click', Form.createDraggableVehicle)
 Form.garageDropEnabled()
-returnToSelectGarageCointerBtn.addEventListener('click', () => {
+returnToSelectGarageConteinerBtn.addEventListener('click', () => {
     setupGarageContainer.style.display = 'none'
     garageManagementContainer.style.display = 'none'
     selectGarageContainer.style.display = 'flex'
 })
 
-const bigGarage = new Garage(123, {
-    car: 10,
-    bike: 5,
-    truck: 2,
-})
+// const bigGarage = new Garage(123, {
+//     car: 10,
+//     bike: 5,
+//     truck: 2,
+// })
 
-const car1 = new Car({
-    registration: 12788,
-    model: 'altima',
-    brand: 'nissan',
-    numberOfWheels: 4,
-})
+// const car1 = new Car({
+//     registration: 12788,
+//     model: 'altima',
+//     brand: 'nissan',
+//     numberOfWheels: 4,
+// })
 
-bigGarage.add(car1)
+// bigGarage.add(car1)
 
-bigGarage.remove(car1)
+// bigGarage.remove(car1)
 
-bigGarage.findVehicleByRegistrationNumber(66224)
-bigGarage.showAllVehiclesParked()
-bigGarage.showFreeParkingSpaces()
+// bigGarage.findVehicleByRegistrationNumber(66224)
+// bigGarage.showAllVehiclesParked()
+// bigGarage.showFreeParkingSpaces()
 
-bigGarage.resetGarageWithNewSlots = {
-    truck: 1,
-    car: 1,
-}
+// bigGarage.resetGarageWithNewSlots = {
+//     truck: 1,
+//     car: 1,
+// }
 
 
 
